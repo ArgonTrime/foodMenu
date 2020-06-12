@@ -231,8 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            const request = new XMLHttpRequest(),
-                  formData = new FormData(form),
+            const formData = new FormData(form),
                   statusMessageForUser = document.createElement('img'),
                   objectForJSONSend = {};
 
@@ -247,21 +246,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 objectForJSONSend[key] = value;
             });
 
-            request.open('POST', 'server.php');
-            request.setRequestHeader('Content-type', 'application/json');
-            request.send(JSON.stringify(objectForJSONSend));
 
-            request.addEventListener('load', () => {
-                if(request.status === 200) {
-                    console.log(request.response);
-                    showModalComplete(messageForUser.success);
-                    
-                    statusMessageForUser.remove();
-                    form.reset();
-                    
-                } else {
-                    showModalComplete(messageForUser.fail);
-                }
+
+            fetch('server.php', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(objectForJSONSend)
+            })
+            .then(data => data.text())
+            .then(data => {
+                console.log(data);
+                showModalComplete(messageForUser.success);
+                statusMessageForUser.remove();
+                form.reset();
+            })
+            .catch(() => {
+                showModalComplete(messageForUser.fail);
+            })
+            .finally(() => {
+                form.reset();
             });
         });
     }
