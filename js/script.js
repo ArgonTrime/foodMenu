@@ -102,17 +102,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========== модальное окно ==========
 
     const modalBtn = document.querySelectorAll('[data-modal]'),
-          closeModalBtn = document.querySelector('[data-close]'),
           modal = document.querySelector('.modal'),
-          modalTimer = setTimeout(openModal, 10000);
+          modalTimer = setTimeout(openModal, 50000);
 
     function closeModal() {
-        modal.classList.toggle('show');
+        // modal.classList.toggle('show');
+        modal.classList.add('hide');
+        modal.classList.remove('show');
         document.body.style.overflow = '';
     }
 
     function openModal() {
-        modal.classList.toggle('show');
+        // modal.classList.toggle('show');
+        modal.classList.add('show');
+        modal.classList.remove('hide');
         document.body.style.overflow = 'hidden';
         clearInterval(modalTimer);
     }
@@ -121,10 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', openModal);
     });
 
-    closeModalBtn.addEventListener('click', closeModal);
-
     modal.addEventListener('click', (e) => {
-        if(e.target === modal) {
+        if(e.target === modal || e.target.getAttribute('data-close') == '') {
             closeModal();
         }
     });
@@ -217,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const forms = document.querySelectorAll('form'),
           messageForUser = {
-              loading: 'Загрузка',
+              loading: 'icons/spiner.svg',
               success: 'Принято, скоро с вами свяжемся!',
               fail: 'Что-то сломалось'
           };
@@ -226,24 +227,21 @@ document.addEventListener('DOMContentLoaded', () => {
         postData(form);
     }); 
 
-    function formReset(form, statusMessageForUser) {
-        form.reset();
-        setTimeout(() => {
-            statusMessageForUser.remove();
-        }, 2000);
-    }
-
     function postData(form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
             const request = new XMLHttpRequest(),
                   formData = new FormData(form),
-                  statusMessageForUser = document.createElement('div'),
+                  statusMessageForUser = document.createElement('img'),
                   objectForJSONSend = {};
 
-            statusMessageForUser.textContent = messageForUser.loading;
-            form.append(statusMessageForUser);
+            statusMessageForUser.src = messageForUser.loading;
+            statusMessageForUser.style.cssText = `
+                display: block;
+                margin: 0 auto;
+            `;
+            form.insertAdjacentElement('afterend', statusMessageForUser);
 
             formData.forEach((value, key) => {
                 objectForJSONSend[key] = value;
@@ -252,18 +250,43 @@ document.addEventListener('DOMContentLoaded', () => {
             request.open('POST', 'server.php');
             request.setRequestHeader('Content-type', 'application/json');
             request.send(JSON.stringify(objectForJSONSend));
+
             request.addEventListener('load', () => {
                 if(request.status === 200) {
                     console.log(request.response);
-                    statusMessageForUser.textContent = messageForUser.success;
-
-                    formReset(form, statusMessageForUser);
+                    showModalComplete(messageForUser.success);
+                    
+                    statusMessageForUser.remove();
+                    form.reset();
+                    
                 } else {
-                    statusMessageForUser.textContent = messageForUser.fail;
-
-                    formReset(form, statusMessageForUser);
+                    showModalComplete(messageForUser.fail);
                 }
             });
         });
+    }
+
+    function showModalComplete(message) {
+        const modalComplete = document.querySelector('.modal__dialog');
+        
+        modalComplete.classList.add('hide');
+        openModal();
+
+        const modalCompleteWrapper = document.createElement('div');
+        modalCompleteWrapper.classList.add('modal__dialog');
+        modalCompleteWrapper.innerHTML = `
+            <div class='modal__content'>
+                <div class='modal__close' data-close>&times;</div>
+                <div class='modal__title'>${message}</div>
+            </div>
+        `;
+
+        document.querySelector('.modal').append(modalCompleteWrapper);
+        setTimeout(() => {
+            modalCompleteWrapper.remove();
+            modalComplete.classList.add('show');
+            modalComplete.classList.remove('hide');
+            closeModal();
+        }, 4000);
     }
 }); 
