@@ -247,14 +247,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
 
-
-            // fetch('server.php', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-type': 'application/json'
-            //     },
-            //     body: JSON.stringify(objectForJSONSend)
-            // })
             postData('http://localhost:3000/requests', json)
             .then(data => {
                 console.log(data);
@@ -293,5 +285,57 @@ document.addEventListener('DOMContentLoaded', () => {
             modalComplete.classList.remove('hide');
             closeModal();
         }, 4000);
+    }
+
+    // ========== слайдер ==========
+    const sliderPrev = document.querySelector('.offer__slider-prev'),
+          sliderNext = document.querySelector('.offer__slider-next'),
+          offerSlides = document.querySelectorAll('.offer__slide'),
+          current = document.querySelector('#current'),
+          total = document.querySelector('#total');
+
+    let slideNumber = 1;
+
+    showSlide(slideNumber);
+    showTotalSlide();
+    sliderPrev.addEventListener('click', () => {
+        moveSlides(-1);
+    });
+    sliderNext.addEventListener('click', () => {
+        moveSlides(1);
+    });
+
+    function showSlide(numberSlide) {
+        if(numberSlide > offerSlides.length) {
+            slideNumber = 1;
+        }
+
+        if(numberSlide < 1) {
+            slideNumber = offerSlides.length;
+        }
+
+        offerSlides.forEach(slide => slide.classList.add('hide'));
+        offerSlides[slideNumber - 1].classList.remove('hide');
+        showCurrentSlide();
+    }
+
+    function showTotalSlide() {
+        if(offerSlides.length < 10) {
+            total.textContent = `0${offerSlides.length}`;
+        } else {
+            total.textContent = offerSlides.length;
+        }
+    }
+    
+    function showCurrentSlide() {
+        if(offerSlides.length < 10) {
+            current.textContent = `0${slideNumber}`;
+        } else {
+            current.textContent = slideNumber;
+        }
+    }
+
+    function moveSlides(move) {
+        showSlide(slideNumber += move);
     }
 }); 
