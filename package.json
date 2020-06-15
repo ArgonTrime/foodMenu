@@ -1,0 +1,22 @@
+{
+  "name": "foodmenu",
+  "version": "1.0.0",
+  "description": "trane js with udemy course",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArgonTrime/foodMenu.git"
+  },
+  "author": "Ihar Trymailau",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ArgonTrime/foodMenu/issues"
+  },
+  "homepage": "https://github.com/ArgonTrime/foodMenu#readme",
+  "devDependencies": {
+    "json-server": "^0.16.1"
+  }
+}
