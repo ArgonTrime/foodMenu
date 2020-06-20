@@ -419,13 +419,12 @@ document.addEventListener('DOMContentLoaded', () => {
         dots.push(dot);
     }
 
-
     sliderNext.addEventListener('click', () => {
 
-        if(offset === +width.slice(0, width.length - 2) * (offerSlides.length - 1)) {
+        if(offset === changeStrInNumber(width) * (offerSlides.length - 1)) {
             offset = 0;
         } else {
-            offset += +width.slice(0, width.length - 2);
+            offset += changeStrInNumber(width);
         }
 
         slidesField.style.transform = `translateX(-${offset}px)`;
@@ -443,9 +442,9 @@ document.addEventListener('DOMContentLoaded', () => {
     sliderPrev.addEventListener('click', () => {
 
         if(offset === 0) {
-            offset = +width.slice(0, width.length - 2) * (offerSlides.length - 1);
+            offset = changeStrInNumber(width) * (offerSlides.length - 1);
         } else {
-            offset -= +width.slice(0, width.length - 2);
+            offset -= changeStrInNumber(width);
         }
 
         slidesField.style.transform = `translateX(-${offset}px)`;
@@ -465,7 +464,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const slideTo = e.target.getAttribute('data-slide-to');
 
             slideNumber = slideTo;
-            offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+            offset = changeStrInNumber(width) * (slideTo - 1);
             slidesField.style.transform = `translateX(-${offset}px)`;
 
             
@@ -484,5 +483,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             current.textContent = slideNumber;
         }
+    }
+    function changeStrInNumber(str) {
+        return +str.replace(/\D/g, '');
     }
 }); 
