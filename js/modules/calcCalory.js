@@ -116,4 +116,4 @@ function calcCalory() {
     getInputInformation('#age');
 }
 
-module.exports = calcCalory;
+export default calcCalory;

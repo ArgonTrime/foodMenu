@@ -1,8 +1,8 @@
-function tabs() {
+function tabs(tabsSelector, tabsContentSelector, tabsParentSelector, activeClass) {
     // ========== табы ==========
-    const tabs = document.querySelectorAll('.tabheader__item'),
-          tabsContent = document.querySelectorAll('.tabcontent'),
-          tabsParent = document.querySelector('.tabheader__items');
+    const tabs = document.querySelectorAll(tabsSelector),
+          tabsContent = document.querySelectorAll(tabsContentSelector),
+          tabsParent = document.querySelector(tabsParentSelector);
 
 
     hideTabsContent();
@@ -12,7 +12,7 @@ function tabs() {
     tabsParent.addEventListener('click', event => {
         const target = event.target;
 
-        if(target && target.classList.contains('tabheader__item')) {
+        if(target && target.classList.contains(tabsSelector.slice(1))) {
             tabs.forEach((tab, index) => {
                 if(target == tab) {
                     hideTabsContent();
@@ -32,15 +32,15 @@ function tabs() {
         });
 
         tabs.forEach(item => {
-            item.classList.remove('tabheader__item_active');
+            item.classList.remove(activeClass);
         });
     }
 
     function showTabContent (index = 0) {
         tabsContent[index].classList.add('show', 'fade');
         tabsContent[index].classList.remove('hide');
-        tabs[index].classList.add('tabheader__item_active');
+        tabs[index].classList.add(activeClass);
     }
 }
 
-module.exports = tabs;
+export default tabs;

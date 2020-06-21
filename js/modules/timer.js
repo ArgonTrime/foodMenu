@@ -1,7 +1,6 @@
-function timer() {
+function timer(id, closeDate) {
     // ========== таймер ==========
-    const closeDate = '2020-06-25';
-    setClock('.timer', closeDate);
+    setClock(id, closeDate);
 
     function getTimeRemeining (endtime) {
         const t = Date.parse(endtime) - Date.parse(new Date()),
@@ -54,4 +53,4 @@ function timer() {
     }
 }
 
-module.exports = timer;
+export default timer;

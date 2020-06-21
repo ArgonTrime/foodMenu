@@ -1,3 +1,5 @@
+import {getResourse} from '../services/services';
+
 function cards() {
     // ========== карточки ========== 
     class Cards {
@@ -40,16 +42,6 @@ function cards() {
             this.parentElement.append(element);
         }
     }
-    
-    const getResourse = async (url) => {
-        const res = await fetch(url);
-
-        if(!res.ok) {
-            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-        }
-
-        return await res.json();
-    };
 
     getResourse('http://localhost:3000/menu')
         .then(data => {
@@ -59,4 +51,4 @@ function cards() {
         });
 }
 
-module.exports = cards;
+export default cards;
